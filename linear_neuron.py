@@ -32,10 +32,10 @@ for epoch in range(epochs):
 	error = 0.5 * np.square(Y - prediction)
 	total_error = 0.5 * np.sum(np.square(Y - prediction))
 
-	print "Epoch number: " + str(epoch) + "    total_error: " + str(total_error) + "\n"
+	print "Epoch number: " + str(epoch) + "    total_error: " + str(total_error)
 	
 
-	error_derivative = - np.sum(X*(Y - prediction))
+	error_derivative = - np.dot(np.transpose(X),(Y - prediction))
 	delta_w = - epsilon * error_derivative
 
 	W = W + delta_w
