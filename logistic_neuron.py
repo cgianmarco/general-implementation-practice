@@ -36,7 +36,8 @@ for epoch in range(epochs):
 	print "Epoch number: " + str(epoch) + "    total_error: " + str(total_error)
 
 
-	error_derivative = - np.sum(X * prediction * (1-prediction) * (Y - prediction))
+	# error_derivative = - np.sum(X * prediction * (1-prediction) * (Y - prediction))
+	error_derivative = - np.sum(np.dot(np.transpose(X), prediction * (1-prediction) * (Y - prediction)), axis=0)
 	# print error_derivative
 
 	delta_w = - epsilon * error_derivative
