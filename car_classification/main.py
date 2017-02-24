@@ -71,6 +71,26 @@ print Y.shape
 
 ################################################################################
 
+# We use a 2 layers neural network with one 8 neurons hidden layer
+
+n_inputs = 6
+n_h1 = 8
+n_outputs = 4
+n_samples = len(X)
+
+
+
+w_l1 = np.random.randn(n_inputs, n_h1)
+w_output = np.random.randn(n_h1, n_outputs)
+
+h1 = np.tanh(X.dot(w_l1))
+assert h1.shape == (n_samples, n_h1), "Error on first layer"
+
+prediction = h1.dot(w_output)
+assert prediction.shape == (n_samples, n_outputs), "Error on second layer"
+
+# TODO: add softmax
+
 
 
 
