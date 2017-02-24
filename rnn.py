@@ -2,7 +2,7 @@ import numpy as np
 import random
 from keras.utils import np_utils
 
-
+weight_init_scale = 0.01
 # fix random seed for reproducibility
 np.random.seed(7)
 # define the raw dataset
@@ -48,6 +48,23 @@ print Y.shape
 print X[:3]
 print Y[:3]
 
+# w_hh = weight_init_scale * np.random.randn(hidden_size, hidden_size)
+# 	# print w_hh.shape
+
+# w_xh = weight_init_scale * np.random.randn(n_inputs, hidden_size)
+# # print w_xh.shape
+
+# w_hy = weight_init_scale * np.random.randn(hidden_size, n_outputs)
+# # print w_hy.shape
+
+w_hh = np.random.randn(hidden_size, hidden_size) / np.sqrt(hidden_size)
+	# print w_hh.shape
+
+w_xh = np.random.randn(n_inputs, hidden_size) / np.sqrt(hidden_size)
+# print w_xh.shape
+
+w_hy = np.random.randn(hidden_size, n_outputs) / np.sqrt(hidden_size)
+# print w_hy.shape
 
 
 def get_random(data_x, data_y):
@@ -65,16 +82,9 @@ h_prev = np.zeros([1, hidden_size])
 
 for epoch in range(epochs):
 
-	x, y = get_random(X, Y)
+	x, y = get_random(X[:5], Y)
 
-	w_hh = np.random.randn(hidden_size, hidden_size)
-	# print w_hh.shape
-
-	w_xh = np.random.randn(n_inputs, hidden_size)
-	# print w_xh.shape
-
-	w_hy = np.random.randn(hidden_size, n_outputs)
-	# print w_hy.shape
+	
 
 	h = np.tanh(h_prev.dot(w_hh.T) + x.dot(w_xh))
 	# Relu
