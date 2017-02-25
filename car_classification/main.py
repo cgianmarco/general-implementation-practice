@@ -74,22 +74,69 @@ print Y.shape
 # We use a 2 layers neural network with one 8 neurons hidden layer
 
 n_inputs = 6
-n_h1 = 8
+n_h1 = 20
 n_outputs = 4
 n_samples = len(X)
+epochs = 100000
+learning_rate = 1e-0
+reg=1e-3
+
+
+def softmax(x):
+	return np.array([np.exp(x[i])/(np.sum(np.exp(x), axis=1)[i]) for i in range(len(x))])
+
+def sigmoid(x):
+	return 1/(1+np.exp(-x))
+
+def measure_accuracy(prediction, target):
+	accuracy = 0
+	for i in range(len(target)):
+		if np.argmax(target[i]) == np.argmax(prediction[i]):
+			accuracy += 1
+	return float(accuracy)/len(target)
+
+
+w_l1 = 0.01 * np.random.randn(n_inputs, n_h1)
+w_output = 0.01 * np.random.randn(n_h1, n_outputs)
+
+
+for epoch in range(epochs):
+
+	h1 = np.maximum(0, X.dot(w_l1))
+	assert h1.shape == (n_samples, n_h1), "Error on first layer"
+
+	prediction = softmax(h1.dot(w_output))
+	assert prediction.shape == (n_samples, n_outputs), "Error on second layer"
+
+
+	reg_loss = 0.5 * reg * np.sum(w_output*w_output) + 0.5 * reg * np.sum(w_l1 * w_l1)
+	loss =  np.sum(-np.sum(Y * np.log(prediction), axis=1), axis=0)/n_samples + reg_loss
+
+	accuracy = measure_accuracy(prediction, Y)
+
+	print "Epoch number: " + str(epoch) + "    loss: " + str(loss) + "    accuracy: " + str(accuracy)
+
+	output_delta = (prediction - Y)
+
+	# Sigmoid backprop
+	# l1_delta = output_delta.dot(w_output.T) * h1 * (1 - h1)
+
+	# tanh backprop
+	# l1_delta = output_delta.dot(w_output.T) * (1 - h1**2)
+
+	# ReLU backprop
+	l1_delta = output_delta.dot(w_output.T)
+	l1_delta[ h1 <= 0 ] = 0
+
+	w_output_delta = h1.T.dot(output_delta) * reg
+	w_l1_delta = X.T.dot(l1_delta) * reg
+
+
+	w_output -= learning_rate * w_output_delta
+	w_l1 -= learning_rate * w_l1_delta
 
 
 
-w_l1 = np.random.randn(n_inputs, n_h1)
-w_output = np.random.randn(n_h1, n_outputs)
-
-h1 = np.tanh(X.dot(w_l1))
-assert h1.shape == (n_samples, n_h1), "Error on first layer"
-
-prediction = h1.dot(w_output)
-assert prediction.shape == (n_samples, n_outputs), "Error on second layer"
-
-# TODO: add softmax
 
 
 
