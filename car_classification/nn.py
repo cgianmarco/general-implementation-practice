@@ -106,28 +106,73 @@ class Dense:
 		self.weights = 0.01 * np.random.randn(n_inputs, number_of_neurons)
 
 	def forward(self, X):
-		return X.dot(self.weights)
+		self.input = X
+		self.output = X.dot(self.weights)
+		return self.output
 
-	def backward(selfs):
-		pass
+	def backward(self, dout):
+		dW = self.input.T.dot(dout)
+		dX = dout.dot(self.weights.T)
+
+		return dX, dW
 
 
 
 class Activation:
 
+
+	def __init__(self, function):
+		self.function = function
+
 	def forward(self, X):
-		return np.maximum(0, X)
+		self.input = X
 
-	def backward(selfs):
-		pass
+		if self.function == "ReLU":
+			self.output = np.maximum(0, X)
 
+		elif self.function == "tanh":
+			self.output = np.tanh(np.tanh(0, X))
+
+		elif self.function == "softmax":
+			self.output = np.array([np.exp(x[i])/(np.sum(np.exp(x), axis=1)[i]) for i in range(len(x))])
+
+		else:
+			self.output = np.maximum(0, X)
+
+		return self.output
+
+
+	def backward(self, dout):
+		 
+		if self.function == "ReLU":
+			gradient = 0
+
+		elif self.function == "tanh":
+			gradient = 1 - self.output**2
+
+		elif self.function == "softmax":
+			SM = self.output.reshape((-1, 1))
+			gradient = np.diag(self.output) - np.dot(SM, SM.T)
+		else:
+			derivative = np.maximum(0, X)
+
+		dX = dout * gradient
+
+		return dX
 		
 
 layer_1 = Dense(n_h1, n_inputs)
-layer_2 = Activation()
+layer_2 = Activation("tanh")
 z = layer_1.forward(X)
 print z.shape
-print layer_2.forward(z).shape
+pred = layer_2.forward(z)
+print Y.shape
+error = 
+
+
+
+
+
 
 
 # w_l1 = 0.01 * np.random.randn(n_inputs, n_h1)
