@@ -79,7 +79,6 @@ n_outputs = 4
 n_samples = len(X)
 epochs = 100000
 learning_rate = 1e-0
-learning_rate = 0.01
 reg=1e-3
 
 
@@ -212,6 +211,10 @@ for epoch in range(epochs):
 	# reg_loss = 0.5 * reg * np.sum(w_output*w_output) + 0.5 * reg * np.sum(w_l1 * w_l1)
 	# loss =  - np.sum(np.sum(Y * np.log(prediction), axis=1), axis=0)/n_samples
 	loss =  np.sum(-np.sum(Y * np.log(prediction), axis=1), axis=0)/n_samples
+	# correct_log_probs = -np.log(prediction[range(n_samples), np.argmax(Y, axis=1)])
+	# loss = np.sum(correct_log_probs)
+	# loss /= n_samples
+
 
 	# loss = np.sum(-np.log((Y * prediction)))/n_samples
 
